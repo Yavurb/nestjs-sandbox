@@ -2,8 +2,13 @@ import { createParamDecorator, ExecutionContext } from '@nestjs/common';
 import { User } from '@prisma/client';
 
 export const GetUser = createParamDecorator(
-  (_data: unknown, ctx: ExecutionContext): User => {
+  (data: string | undefined, ctx: ExecutionContext): User => {
     const request = ctx.switchToHttp().getRequest();
+
+    if (data) {
+      return request.user[data];
+    }
+
     return request.user;
   },
 );
