@@ -1,9 +1,19 @@
 version: '3.8'
 services:
-  nestsandbox-db:
+  dev-db:
     image: postgres:13
     ports:
       - 5434:5432
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: 123
+      POSTGRES_DB: nestsandbox
+    networks:
+      - nestsandbox
+  test-db:
+    image: postgres:13
+    ports:
+      - 5435:5432
     environment:
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: 123
