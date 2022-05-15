@@ -4,6 +4,7 @@ import * as pactum from 'pactum';
 import { PrismaService } from '../src/prisma/prisma.service';
 import { AppModule } from '../src/app.module';
 import { AuthDto } from '../src/auth/dto';
+import { UserDto } from '../src/user/dto';
 
 describe('App e2e', () => {
   let app: INestApplication;
@@ -137,14 +138,40 @@ describe('App e2e', () => {
           .expectStatus(200)
           .expectJsonLike({
             token: /^[a-zA-Z0-9-_\.]+$/,
-          });
+          })
+          .stores('userAt', 'token');
       });
     });
   });
 
   describe('Users', () => {
-    describe('Get me', () => {});
-    describe('Edit me', () => {});
+    describe('Get me', () => {
+      it('Should get current user', () => {
+        return pactum
+          .spec()
+          .get('/users/me')
+          .withHeaders('Authorization', 'Bearer $S{userAt}')
+          .expectStatus(200);
+      });
+    });
+
+    describe('Edit me', () => {
+      const userDto: UserDto = {
+        email: 'testmail@dropjar.com',
+        firstName: 'John',
+        lastName: 'Doe',
+      };
+
+      it('Should edit the user information', () => {
+        return pactum
+          .spec()
+          .patch('/users/me')
+          .withHeaders('Authorization', 'Bearer $S{userAt}')
+          .withBody(userDto)
+          .expectStatus(200)
+          .expectJsonLike(userDto);
+      });
+    });
   });
 
   describe('Bookmarks', () => {
