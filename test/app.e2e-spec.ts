@@ -72,7 +72,7 @@ describe('App e2e', () => {
           .expectStatus(400);
       });
 
-      it('Should signup a user', async () => {
+      it('Should signup a user', () => {
         return pactum
           .spec()
           .post('/auth/signup')
@@ -84,7 +84,7 @@ describe('App e2e', () => {
           });
       });
 
-      it('Should not signup the same user twice', async () => {
+      it('Should not signup the same user twice', () => {
         return pactum
           .spec()
           .post('/auth/signup')
