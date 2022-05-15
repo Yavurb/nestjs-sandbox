@@ -97,6 +97,38 @@ describe('App e2e', () => {
     });
 
     describe('Signin', () => {
+      it('Should not signin a user without password', () => {
+        return pactum
+          .spec()
+          .post('/auth/signin')
+          .withBody(authDtoWithoutPassword)
+          .expectStatus(400);
+      });
+
+      it('Should not signin a user without email', () => {
+        return pactum
+          .spec()
+          .post('/auth/signin')
+          .withBody(authDtoWithoutEmail)
+          .expectStatus(400);
+      });
+
+      it('Should not signin a user with invalid email', () => {
+        return pactum
+          .spec()
+          .post('/auth/signin')
+          .withBody(authDtoWithInvalidEmail)
+          .expectStatus(400);
+      });
+
+      it('Should not signin a nonexistent user', () => {
+        return pactum
+          .spec()
+          .post('/auth/signin')
+          .withBody({ ...authDto, email: 'testemail2@dropjar.com' })
+          .expectStatus(400);
+      });
+
       it('Should signin a user', () => {
         return pactum
           .spec()
